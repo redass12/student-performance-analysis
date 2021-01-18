@@ -1,0 +1,521 @@
+---
+title: "Student Performance"
+author: "Didier , Bertrand , Reda"
+date: "1/17/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Student Performance (Mini project) : 
+
+
+### I - Préparation des données :
+
+> Chargement des library : 
+
+```{r}
+library(dplyr)
+library(tidyverse)
+library(readxl)
+library(broom)
+library(pastecs)
+```
+
+> Importation des donnee des Etudiants :
+
+```{r}
+data <- read_excel("MP-5RBIG.xlsx")
+```
+
+### 1 Verification des valeurs manquantes : 
+
+```{r}
+sapply(data,function(x) sum(is.na(x)))
+```
+
+### 2 Ajout de la variable binaire finalResult :
+
+```{r}
+newDf <- data %>%
+  mutate(finalResutl=ifelse(G3>=10,"Pass","Fail"))
+```
+
+### 3 Ajout de la varialbe AcademicGreade : 
+
+```{r}
+newDf <- newDf %>%
+    mutate(academicGrade = case_when(
+      G3>=16 & G3 <=20 ~ "A",
+      G3>=14 & G3 <=15 ~ "B",
+      G3>=12 & G3 <=13 ~ "C",
+      G3>=10& G3 <=11 ~ "D",
+      G3>=0 & G3 <=9 ~ "E",
+    ))
+```
+
+
+### 4 Afficher la structure des donnee : 
+
+```{r}
+str(newDf)
+```
+
+
+***
+
+## II Etude des variables Categorielles :
+
+### 1 Etude des principales varialbe catégorielles : 
+
+School , sex , Pstatus , Studytime  , faliure  , health , internet   , FinalResult , AcademicGrade 
+
+* Etude de la variable School :
+ + Frequence & Proportion:
+
+```{r}
+  #Frequence:
+  school.table <- table(newDf$school)
+  #Proportion : 
+  prop.table(school.table)
+```
+ + Diagrame qui represente la frequence des etudiant par ecole :
+
+```{r}
+ggplot(newDf , aes(school)) +
+  geom_bar(fill = "cornflowerblue", 
+           color="black") +
+  labs(x = "School", 
+       y = "Frequency", 
+       title = "Student by School")
+```
+
+ + Chi square Test good of fit :
+ 
+ H0 : les valeur sont distribuer comme suive : 80%:Gp , 20:Ms
+ 
+```{r}
+chisq.test(school.table , p=c(0.9 , 0.1))
+```
+ ***
+ * Etude de la variable sex :
+  + Frequence & Proportion:
+
+```{r}
+  #Frequence:
+  sex.table <- table(newDf$sex)
+  #Proportion : 
+  prop.table(sex.table)
+```
+ + Diagrame qui represente la frequence des etudiant par sex :
+
+```{r}
+ggplot(newDf , aes(sex)) +
+  geom_bar(fill = "deepskyblue4", 
+           color="black") +
+  labs(x = "sex", 
+       y = "Frequency", 
+       title = "Student by sex")
+```
+
+ + Chi square Test good of fit :
+ 
+ H0 : les valeur sont distribuer comme suive : 80%:Gp , 20:Ms
+ 
+```{r}
+chisq.test(sex.table)
+```
+
+***
+ * Etude de la variable faliure :
+  + Frequence & Proportion:
+
+```{r}
+  #Frequence:
+  failures.table <- table(newDf$failures)
+  #Proportion : 
+  prop.table(failures.table)
+```
+ + Diagrame qui represente la frequence des etudiant par sex :
+
+```{r}
+ggplot(newDf , aes(failures )) +
+  geom_bar(fill = "deepskyblue4", 
+           color="black") +
+  labs(x = "failures ", 
+       y = "Frequency", 
+       title = "Student by failures ")
+```
+
+ + Chi square Test good of fit :
+ 
+ H0 : les valeur sont distribuer comme suive : 80%:Gp , 20:Ms
+ 
+```{r}
+chisq.test(failures.table)
+```
+
+***
+ * Etude de la variable internet :
+  + Frequence & Proportion:
+
+```{r}
+  #Frequence:
+  internet.table <- table(newDf$internet)
+  #Proportion : 
+  prop.table(internet.table)
+```
+ + Diagrame qui represente la frequence des etudiant par sex :
+
+```{r}
+ggplot(newDf , aes(internet )) +
+  geom_bar(fill = "deepskyblue4", 
+           color="black") +
+  labs(x = "internet ", 
+       y = "Frequency", 
+       title = "Student by internet ")
+```
+
+ + Chi square Test good of fit :
+ 
+ H0 : les valeur sont distribuer comme suive : 80%:Gp , 20:Ms
+ 
+```{r}
+chisq.test(internet.table)
+```
+
+***
+ * Etude de la variable finalResutl :
+  + Frequence & Proportion:
+
+```{r}
+  #Frequence:
+  finalResutl.table <- table(newDf$finalResutl)
+  #Proportion : 
+  prop.table(finalResutl.table)
+```
+ + Diagrame qui represente la frequence des etudiant par sex :
+
+```{r}
+ggplot(newDf , aes(finalResutl )) +
+  geom_bar(fill = "deepskyblue4", 
+           color="black") +
+  labs(x = "finalResutl ", 
+       y = "Frequency", 
+       title = "Student par Resultat final ")
+```
+
+ + Chi square Test good of fit :
+ 
+ H0 : les valeur sont distribuer comme suive : 80%:Gp , 20:Ms
+ 
+```{r}
+chisq.test(finalResutl.table)
+```
+
+***
+ * Etude de la variable academicGrade :
+  + Frequence & Proportion:
+
+```{r}
+  #Frequence:
+  academicGrade.table <- table(newDf$academicGrade)
+  #Proportion : 
+  prop.table(academicGrade.table)
+```
+ + Diagrame qui represente la frequence des etudiant par sex :
+
+```{r}
+ggplot(newDf , aes(academicGrade )) +
+  geom_bar(fill = "deepskyblue4", 
+           color="black") +
+  labs(x = "academicGrade ", 
+       y = "Frequency", 
+       title = "Student par Notes academic ")
+```
+
+ + Chi square Test good of fit :
+ 
+ H0 : les valeur sont distribuer comme suive : 80%:Gp , 20:Ms
+ 
+```{r}
+chisq.test(academicGrade.table)
+```
+
+***
+
+### 2 Représentation des associations entre des paires de variables catégorielles : 
+
++ Representing the association between sex ~ final result
+
+```{r}
+ggplot(newDf, 
+       aes(x = finalResutl, 
+           fill = sex)) + 
+  geom_bar(position = "stack") +
+  scale_fill_brewer(palette = "Set2") +
+  geom_text(
+    aes(label=after_stat(count)),
+    stat = 'count',
+    position = position_stack(vjust = 0.5)
+  )
+```
+
++ Representing the association between Studytime ~ Academic Grade 
+
+```{r}
+ggplot(newDf, 
+       aes(x = academicGrade, 
+           fill = factor(studytime , 
+                         levels= c("1" , "2" ,"3", "4"),
+                         labels = c("Less then 2h" , "Between 2h & 5h" , "Between 5h & 10h" , "Between 4h & 10h")
+                         ))) + 
+  geom_bar(position = "fill") +
+  labs(y = "Proportion", 
+       fill = "Study Time",
+       x = "Academic Grade ",
+       title = "Academic Grades by  studytime") +
+  theme_minimal()
+```
+
++ Representing the association between Internet ~ finalResult
+
+```{r}
+internetByfinalR <- newDf %>%
+  group_by(internet, finalResutl) %>%
+  summarize(n = n()) %>% 
+  mutate(pct = n/sum(n),
+         lbl = scales::percent(pct))
+
+internetByfinalR
+```
+```{r}
+ggplot(internetByfinalR, 
+       aes(x = finalResutl,
+           y = pct,
+           fill = internet)) + 
+  geom_bar(stat = "identity",
+           position = "fill") +
+  scale_y_continuous(breaks = seq(0, 1, .2), 
+                     label = waiver()) +
+  geom_text(aes(label = lbl), 
+            size = 3, 
+            position = position_stack(vjust = 0.5)) +
+  scale_fill_brewer(palette = "iorikeet") +
+  labs(y = "Percent", 
+       fill = "Internet",
+       x = "Final Result",
+       title = "Final Result by Internet") +
+  theme_minimal()
+```
+
++ Representing the association between Father job  ~ final results
+
+```{r}
+ggplot(newDf, aes(x=Fjob , group=finalResutl,fill=finalResutl)) + 
+  geom_bar(position = "dodge") +
+  scale_fill_brewer(palette = "Set1") +
+  geom_text(
+    aes(label=after_stat(count)),
+    stat = 'count',
+     position = position_dodge(0.9)
+  )
+```
+
++ Representing the association between final Result  ~ studytime
+
+
+```{r}
+failureBystudytime <- newDf %>%
+  group_by(failures, studytime) %>%
+  summarize(n = n()) %>% 
+  mutate(pct = n/sum(n),
+         lbl = scales::percent(pct))
+
+failureBystudytime
+
+ggplot(failureBystudytime,aes(failures , y=pct , fill=factor(studytime , 
+                         levels= c("1" , "2" ,"3", "4"),
+                         labels = c("Less then 2h" , "Between 2h & 5h" , "Between 5h & 10h" , "Between 4h & 10h")
+                         ))) + 
+  geom_bar(stat = "identity",
+           position = "fill") +
+   scale_y_continuous(breaks = seq(0, 1, .2), 
+                     label = waiver()) +
+  geom_text(aes(label = lbl), 
+            size = 3, 
+            position = position_stack(vjust = 0.5)) +
+  scale_fill_brewer(palette = "Set3") +
+  labs(y = "Percent", 
+       fill = "Study Time",
+       x = "Failures",
+       title = "Failures  by Studytime") +
+  theme_minimal()
+```
+
+
+```{r}
+ggplot(newDf, aes(x=higher, group=finalResutl,fill=finalResutl)) + 
+  geom_bar() +
+  geom_text(
+    aes(label=after_stat(count)),
+    stat = 'count',
+    position = position_stack(vjust = 0.5))
+  
+```
+
+***
+
+### 3 Study associations between pairs of categorical variables with Chi-squared tests : 
+
+The Hypotheses are :
+
+H0 : the variables are independent, there is no relationship between the two categorical variables. Knowing the value of one variable does not help to predict the value of the other variable
+
+H1: the variables are dependent, there is a relationship between the two categorical variables. Knowing the value of one variable helps to predict the value of the other variable
+
+
+
+
+  * Study association between Sex and final result 
+  
+    + calculating 2-Way Frequency Table
+    
+```{r}
+asc_sex_finalR <- table(newDf$sex , newDf$finalResutl)
+```
+    
+   + Performing the Chi-Square Test of Independence : 
+   
+```{r}
+tidy(chisq.test(asc_sex_finalR))
+```
+we see that the p-value is less than the significance level of 5%. Like any other statistical test, if the 
+p-value is less than the significance level, we can reject the null hypothesis.
+    
+  * Study association between Internet and final result 
+  
+    + calculating 2-Way Frequency Table
+    
+```{r}
+asc_internet_finalR <- table(newDf$internet , newDf$finalResutl)
+```
+    
+  + Performing the Chi-Square Teest of Independence :
+    
+```{r}
+tidy(chisq.test(asc_internet_finalR))
+```
+    
+    
+   * Study association between StudyTime and failures 
+  
+    + calculating 2-Way Frequency Table
+```{r}
+asc_studyT_failure <- table(newDf$studytime , newDf$failures)
+```
+    
+   + Performing the Chi-Square Teest of Independence : 
+    
+```{r}
+tidy(chisq.test(asc_studyT_failure))
+```
+  
+
+   * Study association between studytime and final result 
+  
+    + calculating 2-Way Frequency Table
+```{r}
+asc_studyT_finalR <- table(newDf$studytime , newDf$finalResutl)
+```
+
+   + Performing the Chi-Square Test of Independence : 
+```{r}
+tidy(chisq.test(asc_internet_finalR))
+```
+
+    
+  * Study association between Sex and final result 
+  
+    + calculating 2-Way Frequency Table
+```{r}
+asc_famrel_finalR <- table(newDf$famrel  , newDf$finalResutl)
+```
+    
+    
+   + Performing the Chi-Square Test of Independence : 
+    
+```{r}
+tidy(chisq.test(asc_famrel_finalR))
+```
+  
+
+***
+
+### III - Etude des variables quantitatives :
+
+### 1 Étudiez individuellement les principales variables quantitatives : 
+
+  * statistiques descriptives :
+  
+```{r}
+# Selecting quantitatives variales :
+q_var <- newDf %>% 
+  select(absences , age , G1 , G2 , G3)
+summary(q_var)
+```
+```{r}
+options(scipen=100)
+options(digits=2)
+stat.desc(q_var)
+```
+  
+  * Ploting somme graphique that describe the destribution of a single quantitative variable : 
+  
+   + Age distribution : 
+   
+```{r}
+library(scales)  
+ggplot(newDf , aes(x=age , y= ..count.. / sum(..count..))) + 
+  geom_histogram(fill = "cornflowerblue", 
+                 color = "white") +
+  labs(title = "Student by Age",
+       x = "Age" , y="Percent") +
+  scale_y_continuous(labels = percent , limits = c(0, 0.3))
+```
+   
+   + G1 (first period grade in Math) distribution :
+   
+```{r}
+ggplot(newDf , aes(x=G1)) + 
+  geom_histogram(bins=30 , fill = "coral1", 
+                 color = "white") +
+  labs(title = "Student by G1",
+       x = "G1" , y="Count")
+```
+   
+  + G2 (Second period grade in Math) distribution :
+  
+```{r}
+ggplot(newDf , aes(x=G2)) + 
+  geom_histogram(bins=30 , fill = "coral2", 
+                 color = "white") +
+  labs(title = "Student by G2",
+       x = "G2" , y="Count")
+```
+
++ G2 (Second period grade in Math) distribution :
+
+```{r}
+ggplot(newDf , aes(x=G3)) + 
+  geom_histogram(bins=30 , fill = "coral3", 
+                 color = "white") +
+  labs(title = "Student by G3",
+       x = "G3" , y="Count")
+```
+
+
+
